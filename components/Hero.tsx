@@ -3,13 +3,19 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const words = ["brilliance", "mastery", "distinction", "precision", "authority", "craftsmanship", "leadership"];
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  theme?: 'dark' | 'light';
+}
+
+const Hero: React.FC<HeroProps> = ({ theme = 'dark' }) => {
   const [wordIndex, setWordIndex] = useState(0);
   const [currentWord, setCurrentWord] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [typeSpeed, setTypeSpeed] = useState(150);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     const handleType = () => {
@@ -49,7 +55,7 @@ const Hero: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-larsson-black">
+    <div ref={containerRef} className={`relative min-h-screen w-full flex items-center justify-center overflow-hidden transition-colors duration-700 ${isDark ? 'bg-larsson-black' : 'bg-transparent'}`}>
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <video 
           autoPlay 
@@ -60,7 +66,7 @@ const Hero: React.FC = () => {
         >
           <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-geometric-design-background-302-large.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-larsson-black/40" />
+        <div className={`absolute inset-0 transition-colors duration-700 ${isDark ? 'bg-larsson-black/40' : 'bg-white/40'}`} />
       </div>
 
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -78,25 +84,19 @@ const Hero: React.FC = () => {
           Visionary • Creative • Authoritative
         </h2>
         
-        {/* We use a flex-col layout for the H1 on mobile to prevent horizontal shifts, 
-            and a fixed height for the dynamic row on desktop to prevent vertical jumps. */}
-        <h1 className="text-4xl sm:text-6xl md:text-[8rem] font-black leading-[1] md:leading-[0.9] mb-14 tracking-tighter flex flex-col items-center">
-          <span className="block text-white">When elegance meets</span>
+        <h1 className={`text-4xl sm:text-6xl md:text-[8rem] font-black leading-[1] md:leading-[0.9] mb-14 tracking-tighter flex flex-col items-center transition-colors duration-700 ${isDark ? 'text-white' : 'text-larsson-black'}`}>
+          <span className="block">When elegance meets</span>
           <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 mt-2 md:mt-0">
             <span className="text-gradient">Creative</span>
-            {/* 
-               The dynamic span has a fixed-ish min-height to prevent vertical 'shrinking'. 
-               We also ensure white-space: nowrap to prevent words from wrapping mid-typing.
-            */}
             <div className="relative min-h-[1.2em] flex items-center">
-               <span className="text-larsson-accent inline-block min-w-[200px] sm:min-w-[400px] md:min-w-[650px] border-r-[4px] border-white pr-2 transition-all text-center md:text-left whitespace-nowrap">
+               <span className={`text-larsson-accent inline-block min-w-[200px] sm:min-w-[400px] md:min-w-[650px] border-r-[4px] pr-2 transition-all text-center md:text-left whitespace-nowrap ${isDark ? 'border-white' : 'border-larsson-black'}`}>
                 {currentWord}
               </span>
             </div>
           </div>
         </h1>
 
-        <p className="text-base md:text-xl text-white/60 max-w-3xl mx-auto mb-20 font-light leading-relaxed tracking-wide text-justify-custom">
+        <p className={`text-base md:text-xl max-w-3xl mx-auto mb-20 font-normal leading-relaxed tracking-wide text-justify-custom transition-colors duration-700 ${isDark ? 'text-white/60' : 'text-larsson-black'}`}>
           Larsson Corp is a creative force shaping modern media. We provide corporate polish 
           fused with a daring creative edge, catering to startups, corporate brands, and creative aspirants globally. Our work is the confluence of high-end aesthetics and strategic precision.
         </p>
@@ -104,14 +104,14 @@ const Hero: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 reveal">
           <button 
             onClick={() => document.getElementById('services')?.scrollIntoView({behavior:'smooth'})}
-            className="group relative px-10 py-5 bg-white text-larsson-black font-black uppercase tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-2xl rounded-2xl w-full sm:w-auto text-[11px]"
+            className={`group relative px-10 py-5 font-black uppercase tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-2xl rounded-2xl w-full sm:w-auto text-[11px] ${isDark ? 'bg-white text-larsson-black' : 'bg-larsson-black text-white'}`}
           >
             <span className="relative z-10">Explore Services</span>
             <div className="absolute inset-0 bg-larsson-accent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 opacity-10" />
           </button>
           <button 
              onClick={() => document.getElementById('booking')?.scrollIntoView({behavior:'smooth'})}
-             className="px-10 py-5 border border-white/10 text-white bg-white/5 hover:bg-larsson-accent hover:border-larsson-accent transition-all font-black uppercase tracking-widest shadow-2xl rounded-2xl w-full sm:w-auto text-[11px]"
+             className={`px-10 py-5 border transition-all font-black uppercase tracking-widest shadow-2xl rounded-2xl w-full sm:w-auto text-[11px] ${isDark ? 'border-white/10 text-white bg-white/5 hover:bg-larsson-accent' : 'border-black/10 text-larsson-black bg-black/5 hover:bg-larsson-accent hover:text-white'}`}
           >
             Start Project
           </button>

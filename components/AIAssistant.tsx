@@ -1,19 +1,22 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { getCreativeAdvice } from '../services/geminiService';
 import { Message } from '../types';
 
 interface AIAssistantProps {
   onClose: () => void;
+  theme?: 'dark' | 'light';
 }
 
-const AIAssistant: React.FC<AIAssistantProps> = ({ onClose }) => {
+// Using React.FC to properly define component props and ensure consistency with other components
+const AIAssistant: React.FC<AIAssistantProps> = ({ onClose, theme = 'dark' }) => {
+  const isDark = theme === 'dark';
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hello! I am the Larsson Corp Creative Consultant. How may I help you elevate your brand vision today?" }
+    { role: 'assistant', content: "Hello! I'm the Larsson Creative Consultant. How can I help elevate your vision today?" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  const [copyingId, setCopyingId] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,94 +43,137 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose }) => {
     setIsLoading(false);
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 2000);
+  const copyToClipboard = useCallback((text: string, index: number) => {
+    if (!text) return;
+    const cleanText = text.replace(/\*\*/g, '').replace(/\*/g, '');
+    navigator.clipboard.writeText(cleanText).then(() => {
+      setCopyingId(index);
+      setTimeout(() => setCopyingId(null), 1500);
     });
-  };
+  }, []);
 
-  // Simple formatter for assistant text to handle lists and line breaks
   const formatText = (text: string) => {
     return text.split('\n').map((line, i) => {
-      if (line.trim().startsWith('* ') || line.trim().startsWith('- ')) {
-        return <li key={i} className="ml-4 list-disc">{line.trim().substring(2)}</li>;
+      const trimmed = line.trim();
+      if (!trimmed) return <div key={i} className="h-2" />;
+
+      let segments: React.ReactNode[] = [];
+      const boldRegex = /\*\*(.*?)\*\*/g;
+      let lastIndex = 0;
+      let match;
+
+      while ((match = boldRegex.exec(line)) !== null) {
+        if (match.index > lastIndex) {
+          segments.push(line.substring(lastIndex, match.index));
+        }
+        segments.push(<strong key={match.index} className={`font-black ${isDark ? 'text-white' : 'text-black'}`}>{match[1]}</strong>);
+        lastIndex = boldRegex.lastIndex;
       }
-      return <p key={i} className={line.trim() === '' ? 'h-3' : 'mb-1'}>{line}</p>;
+      
+      if (lastIndex < line.length) {
+        segments.push(line.substring(lastIndex));
+      }
+
+      if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+        const bulletText = line.replace(/^[\s]*[\*\-]\s/, '');
+        return (
+          <li key={i} className={`ml-4 list-disc mb-1 ${isDark ? 'text-white/90' : 'text-black font-semibold'}`}>
+            {bulletText.replace(/\*\*/g, '')}
+          </li>
+        );
+      }
+
+      return <p key={i} className="mb-1 last:mb-0 leading-snug">{segments}</p>;
     });
   };
 
   return (
-    <div className="absolute bottom-24 right-0 w-[350px] md:w-[450px] h-auto bg-larsson-black border-2 border-white/10 shadow-2xl flex flex-col overflow-hidden animate-slide-up z-[80] rounded-2xl backdrop-blur-3xl">
-      {showToast && (
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 z-[90] bg-larsson-accent text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-2xl animate-fade-in">
-          Copied to clipboard
-        </div>
-      )}
-
-      <div className="bg-larsson-navy p-6 flex items-center justify-between border-b border-white/10 shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-black text-larsson-navy text-sm shadow-xl">AI</div>
-          <div>
-            <span className="text-white font-black uppercase tracking-[0.2em] text-[10px] block">Larsson Corp</span>
-            <span className="text-larsson-lightGrey text-[9px] uppercase tracking-widest font-bold">Creative Consultant</span>
+    <div className={`absolute bottom-24 right-0 w-[340px] md:w-[420px] h-[250px] border-2 shadow-2xl flex flex-col overflow-hidden animate-slide-up z-[80] rounded-[1.5rem] backdrop-blur-3xl transition-colors duration-500 ${isDark ? 'bg-larsson-black border-white/10' : 'bg-white border-black/20'}`}>
+      
+      {/* Header */}
+      <div className={`px-5 py-2.5 flex items-center justify-between border-b shrink-0 ${isDark ? 'bg-larsson-navy border-white/10' : 'bg-larsson-grey/5 border-black/10'}`}>
+        <div className="flex items-center gap-2.5">
+          <div className={`w-6 h-6 rounded-full flex items-center justify-center font-black text-[10px] shadow-lg ${isDark ? 'bg-white text-larsson-navy' : 'bg-black text-white'}`}>L</div>
+          <div className="flex flex-col">
+            <span className={`font-black uppercase tracking-[0.2em] text-[9px] ${isDark ? 'text-white' : 'text-black'}`}>Larsson Assistant</span>
+            <span className={`text-[7px] font-bold uppercase tracking-widest ${isDark ? 'text-larsson-accent' : 'text-larsson-accent'}`}>Online Strategy</span>
           </div>
         </div>
-        <button onClick={onClose} className="text-white hover:rotate-90 transition-transform p-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button onClick={onClose} className={`transition-all hover:scale-110 p-1 ${isDark ? 'text-white' : 'text-black'}`}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
-      <div ref={scrollRef} className="h-[150px] p-6 overflow-y-auto space-y-6 scrollbar-hide bg-larsson-black/30">
+      {/* Chat Area */}
+      <div ref={scrollRef} className={`flex-1 p-4 overflow-y-auto space-y-5 scrollbar-hide ${isDark ? 'bg-larsson-black/30' : 'bg-black/5'}`}>
         {messages.map((m, i) => (
           <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
-            <div className={`max-w-[85%] p-5 rounded-2xl text-sm leading-relaxed ${
+            <div className={`relative group max-w-[90%] p-3.5 rounded-[1.2rem] text-[11px] leading-relaxed shadow-sm ${
               m.role === 'user' 
-                ? 'bg-larsson-accent text-white rounded-br-none shadow-lg font-black uppercase tracking-tight' 
-                : 'bg-larsson-grey/50 text-larsson-lightGrey rounded-bl-none border border-white/5 font-medium'
+                ? 'bg-larsson-accent text-white rounded-br-none font-bold' 
+                : (isDark ? 'bg-larsson-grey/60 text-larsson-lightGrey rounded-bl-none border border-white/5 font-medium' : 'bg-white text-black rounded-bl-none border border-black/10 font-medium')
             }`}>
               {m.role === 'assistant' ? formatText(m.content) : m.content}
+              
+              {/* Copy Button Container - Appears on Hover */}
+              {m.role === 'assistant' && (
+                <button 
+                  onClick={() => copyToClipboard(m.content, i)}
+                  className={`absolute -right-10 top-0 p-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 ${isDark ? 'bg-white/5 text-white/50 hover:text-white' : 'bg-black/5 text-black/50 hover:text-black'}`}
+                  title="Copy Text"
+                >
+                  {copyingId === i ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-larsson-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                  )}
+                </button>
+              )}
             </div>
-            {m.role === 'assistant' && (
-              <button 
-                onClick={() => copyToClipboard(m.content)}
-                className="mt-2 flex items-center gap-2 text-[8px] uppercase font-black tracking-widest text-white/30 hover:text-larsson-accent transition-colors ml-1"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                </svg>
-                Copy Strategy
-              </button>
+            {copyingId === i && (
+              <span className="text-[7px] font-black text-larsson-accent uppercase mt-1 mr-2 tracking-widest animate-pulse">Copied!</span>
             )}
           </div>
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-larsson-grey/50 p-5 rounded-2xl text-xs rounded-bl-none animate-pulse text-white/50 font-black tracking-widest uppercase">
-              Architecting Solution...
+            <div className={`flex gap-1 p-3 rounded-[1rem] ${isDark ? 'bg-larsson-grey/50' : 'bg-black/5'}`}>
+              <div className="w-1.5 h-1.5 rounded-full bg-larsson-accent animate-bounce" />
+              <div className="w-1.5 h-1.5 rounded-full bg-larsson-accent animate-bounce [animation-delay:0.2s]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-larsson-accent animate-bounce [animation-delay:0.4s]" />
             </div>
           </div>
         )}
       </div>
 
-      <div className="p-6 border-t border-white/5 bg-larsson-black/50 shrink-0">
-        <div className="flex gap-3">
+      {/* Input Area */}
+      <div className={`p-3 border-t shrink-0 ${isDark ? 'border-white/5 bg-larsson-black/50' : 'border-black/5 bg-white'}`}>
+        <div className="flex gap-2.5">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="INQUIRE CREATIVE STRATEGY..."
-            className="flex-1 bg-white/5 border border-white/10 p-4 text-[10px] font-black tracking-[0.15em] focus:border-larsson-accent outline-none transition-all rounded-lg text-white uppercase"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            placeholder="Inquire strategy..."
+            className={`flex-1 border px-4 py-2 text-[10px] font-medium tracking-wide focus:border-larsson-accent outline-none transition-all rounded-full shadow-inner ${isDark ? 'bg-white/5 border-white/10 text-white placeholder:text-white/20' : 'bg-black/5 border-black/10 text-black placeholder:text-black/40'}`}
           />
           <button 
             onClick={handleSend}
             disabled={isLoading}
-            className="bg-white text-larsson-black p-4 rounded-lg hover:bg-larsson-accent hover:text-white transition-all shadow-xl disabled:opacity-50"
+            className={`h-9 w-9 flex items-center justify-center rounded-full transition-all shadow-lg disabled:opacity-50 shrink-0 ${isDark ? 'bg-white text-larsson-black hover:bg-larsson-accent hover:text-white' : 'bg-larsson-black text-white hover:bg-larsson-accent'}`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </button>
@@ -136,18 +182,11 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose }) => {
 
       <style>{`
         @keyframes slide-up {
-          from { opacity: 0; transform: translateY(40px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from { opacity: 0; transform: translateY(40px) scale(0.95); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .animate-slide-up {
-          animation: slide-up 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .animate-fade-in {
-          animation: fade-in 0.3s ease-out;
+          animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

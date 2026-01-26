@@ -14,6 +14,7 @@ import MotionBackground from './components/MotionBackground';
 
 const App: React.FC = () => {
   const [isAiOpen, setIsAiOpen] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,52 +34,60 @@ const App: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return (
-    <div className="relative min-h-screen bg-larsson-black overflow-x-hidden selection:bg-larsson-accent selection:text-white">
-      {/* Global Motion Background */}
-      <MotionBackground />
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
-      <Navbar onBookingClick={() => {
-        document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
-      }} />
+  return (
+    <div className={`relative min-h-screen transition-colors duration-700 selection:bg-larsson-accent selection:text-white ${theme === 'dark' ? 'bg-larsson-black text-larsson-light' : 'bg-[#F8F9FA] text-larsson-black'}`}>
+      {/* Global Motion Background */}
+      <MotionBackground theme={theme} />
+
+      <Navbar 
+        theme={theme}
+        toggleTheme={toggleTheme}
+        onBookingClick={() => {
+          document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
+        }} 
+      />
       
       <main className="relative z-10">
         <section id="home">
-          <Hero />
+          <Hero theme={theme} />
         </section>
 
-        <section id="services" className="py-32 bg-larsson-black/20 backdrop-blur-sm relative border-y border-white/5">
-          <Services />
+        <section id="services" className={`py-32 backdrop-blur-sm relative border-y transition-colors duration-700 ${theme === 'dark' ? 'bg-larsson-black/20 border-white/5' : 'bg-white/20 border-black/5'}`}>
+          <Services theme={theme} />
         </section>
 
-        <section id="about" className="bg-larsson-black/20 backdrop-blur-sm">
-          <About />
+        <section id="about" className="backdrop-blur-sm">
+          <About theme={theme} />
         </section>
 
-        <section id="founder" className="bg-larsson-black/20 backdrop-blur-sm">
-          <Founder />
+        <section id="founder" className="backdrop-blur-sm">
+          <Founder theme={theme} />
         </section>
 
-        <section id="portfolio" className="py-32 bg-larsson-black/20 backdrop-blur-sm border-y border-white/5">
-          <Portfolio />
+        <section id="portfolio" className={`py-32 backdrop-blur-sm border-y transition-colors duration-700 ${theme === 'dark' ? 'bg-larsson-black/20 border-white/5' : 'bg-white/20 border-black/5'}`}>
+          <Portfolio theme={theme} />
         </section>
 
-        <section id="testimonials" className="bg-larsson-black/20 backdrop-blur-sm">
-          <Testimonials />
+        <section id="testimonials" className="backdrop-blur-sm">
+          <Testimonials theme={theme} />
         </section>
 
-        <section id="booking" className="py-32 bg-larsson-black/40 backdrop-blur-md relative overflow-hidden border-t border-white/5">
-          <Booking />
+        <section id="booking" className={`py-32 backdrop-blur-md relative overflow-hidden border-t transition-colors duration-700 ${theme === 'dark' ? 'bg-larsson-black/40 border-white/5' : 'bg-white/40 border-black/5'}`}>
+          <Booking theme={theme} />
         </section>
       </main>
 
-      <Footer />
+      <Footer theme={theme} />
 
       {/* AI Assistant FAB */}
       <div className="fixed bottom-10 right-10 z-[70]">
         <button
           onClick={() => setIsAiOpen(!isAiOpen)}
-          className="bg-white hover:bg-larsson-accent text-larsson-black hover:text-white w-16 h-16 rounded-full shadow-[0_0_50px_rgba(255,255,255,0.1)] transition-all hover:scale-110 active:scale-95 flex items-center justify-center group overflow-hidden"
+          className={`w-16 h-16 rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 flex items-center justify-center group overflow-hidden ${theme === 'dark' ? 'bg-white text-larsson-black hover:bg-larsson-accent hover:text-white' : 'bg-larsson-black text-white hover:bg-larsson-accent'}`}
         >
           {isAiOpen ? (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -90,7 +99,7 @@ const App: React.FC = () => {
             </svg>
           )}
         </button>
-        {isAiOpen && <AIAssistant onClose={() => setIsAiOpen(false)} />}
+        {isAiOpen && <AIAssistant onClose={() => setIsAiOpen(false)} theme={theme} />}
       </div>
 
       <style>{`

@@ -11,8 +11,13 @@ const projects: PortfolioProject[] = [
   { id: 6, title: 'Creative Workflow Audit', category: 'Consulting', image: 'https://images.unsplash.com/photo-1454165833767-02a6ed30cc6d?auto=format&fit=crop&q=80&w=800', description: 'Strategic analysis resulting in significant efficiency boost for creative teams.' },
 ];
 
-const Portfolio: React.FC = () => {
+interface PortfolioProps {
+  theme?: 'dark' | 'light';
+}
+
+const Portfolio: React.FC<PortfolioProps> = ({ theme = 'dark' }) => {
   const [filter, setFilter] = useState('All');
+  const isDark = theme === 'dark';
   const categories = ['All', 'Design', 'Courses', 'Consulting', 'Events'];
 
   const filteredProjects = filter === 'All' 
@@ -24,8 +29,8 @@ const Portfolio: React.FC = () => {
       <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-12 reveal">
         <div className="max-w-2xl">
           <h2 className="text-[10px] uppercase tracking-[0.5em] font-black text-larsson-accent mb-8">Our Work</h2>
-          <h3 className="text-4xl md:text-7xl font-black mb-10 tracking-tighter text-white">Selected <span className="text-gradient">Works</span></h3>
-          <p className="text-white/40 text-lg font-light leading-relaxed text-justify-custom">
+          <h3 className={`text-4xl md:text-7xl font-black mb-10 tracking-tighter uppercase ${isDark ? 'text-white' : 'text-larsson-black'}`}>Selected <span className="text-gradient">Works</span></h3>
+          <p className={`text-lg font-light leading-relaxed text-justify-custom ${isDark ? 'text-white/40' : 'text-larsson-black'}`}>
             A curated glimpse into our portfolio of excellence and innovation. Each project represents a unique challenge met with strategic creative leadership.
           </p>
         </div>
@@ -36,7 +41,7 @@ const Portfolio: React.FC = () => {
               key={cat}
               onClick={() => setFilter(cat)}
               className={`px-8 py-2.5 text-[9px] uppercase font-black tracking-widest transition-all rounded-full border ${
-                filter === cat ? 'bg-larsson-accent border-larsson-accent text-white shadow-lg' : 'border-white/10 hover:border-white/30 text-white/40'
+                filter === cat ? 'bg-larsson-accent border-larsson-accent text-white shadow-lg' : (isDark ? 'border-white/10 hover:border-white/30 text-white/40' : 'border-black/10 hover:border-black/30 text-larsson-black/40')
               }`}
             >
               {cat}
@@ -49,7 +54,7 @@ const Portfolio: React.FC = () => {
         {filteredProjects.map((project) => (
           <div 
             key={project.id} 
-            className="group relative bg-larsson-grey overflow-hidden reveal transition-all duration-700 ease-out hover:-translate-y-4 rounded-[2rem]"
+            className={`group relative overflow-hidden reveal transition-all duration-700 ease-out hover:-translate-y-4 rounded-[2rem] ${isDark ? 'bg-larsson-grey' : 'bg-white shadow-xl border border-black/5'}`}
           >
             <div className="aspect-[4/5] overflow-hidden">
               <img 

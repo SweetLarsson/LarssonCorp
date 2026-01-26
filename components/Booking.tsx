@@ -1,7 +1,12 @@
 
 import React, { useState } from 'react';
 
-const Booking: React.FC = () => {
+interface BookingProps {
+  theme?: 'dark' | 'light';
+}
+
+const Booking: React.FC<BookingProps> = ({ theme = 'dark' }) => {
+  const isDark = theme === 'dark';
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,34 +33,34 @@ const Booking: React.FC = () => {
     <div className="max-w-4xl mx-auto px-10 md:px-16 py-20">
       <div className="text-center mb-16 reveal">
         <h2 className="text-[10px] uppercase tracking-[0.5em] font-bold text-larsson-accent mb-6">Engagement</h2>
-        <h3 className="text-4xl md:text-6xl font-black mb-8 text-white tracking-tighter uppercase">Start Your Journey</h3>
-        <p className="text-white/40 font-light max-w-xl mx-auto text-sm md:text-base leading-relaxed text-justify-custom">
+        <h3 className={`text-4xl md:text-6xl font-black mb-8 tracking-tighter uppercase ${isDark ? 'text-white' : 'text-larsson-black'}`}>Start Your Journey</h3>
+        <p className={`font-light max-w-xl mx-auto text-sm md:text-base leading-relaxed text-justify-custom ${isDark ? 'text-white/40' : 'text-larsson-black'}`}>
           Every great vision needs a strategic partner. Secure your project slot today. Payments are handled securely via Opay Online Gateway for total peace of mind.
         </p>
       </div>
 
-      <div className="bg-larsson-grey border border-white/5 p-8 md:p-16 shadow-2xl reveal rounded-[2.5rem] backdrop-blur-3xl">
+      <div className={`border p-8 md:p-16 shadow-2xl reveal rounded-[2.5rem] backdrop-blur-3xl transition-colors duration-700 ${isDark ? 'bg-larsson-grey border-white/5' : 'bg-white border-black/5'}`}>
         {!paymentStep ? (
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-3">
-                <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 ml-1">Full Name</label>
+                <label className={`text-[10px] uppercase tracking-[0.3em] font-bold ml-1 ${isDark ? 'text-white/30' : 'text-larsson-black'}`}>Full Name</label>
                 <input 
                   type="text" 
                   required
                   placeholder="John Doe"
-                  className="w-full bg-larsson-black/50 border border-white/5 rounded-2xl p-5 focus:border-larsson-accent outline-none transition-all text-white font-light text-sm"
+                  className={`w-full border rounded-2xl p-5 focus:border-larsson-accent outline-none transition-all font-light text-sm ${isDark ? 'bg-larsson-black/50 border-white/5 text-white' : 'bg-black/5 border-black/10 text-larsson-black'}`}
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                 />
               </div>
               <div className="space-y-3">
-                <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 ml-1">Email</label>
+                <label className={`text-[10px] uppercase tracking-[0.3em] font-bold ml-1 ${isDark ? 'text-white/30' : 'text-larsson-black'}`}>Email</label>
                 <input 
                   type="email" 
                   required
                   placeholder="hello@visionary.com"
-                  className="w-full bg-larsson-black/50 border border-white/5 rounded-2xl p-5 focus:border-larsson-accent outline-none transition-all text-white font-light text-sm"
+                  className={`w-full border rounded-2xl p-5 focus:border-larsson-accent outline-none transition-all font-light text-sm ${isDark ? 'bg-larsson-black/50 border-white/5 text-white' : 'bg-black/5 border-black/10 text-larsson-black'}`}
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                 />
@@ -63,25 +68,25 @@ const Booking: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 ml-1">Primary Interest</label>
+              <label className={`text-[10px] uppercase tracking-[0.3em] font-bold ml-1 ${isDark ? 'text-white/30' : 'text-larsson-black'}`}>Primary Interest</label>
               <select 
-                className="w-full bg-larsson-black/50 border border-white/5 rounded-2xl p-5 focus:border-larsson-accent outline-none transition-all text-white font-light text-sm appearance-none cursor-pointer"
+                className={`w-full border rounded-2xl p-5 focus:border-larsson-accent outline-none transition-all font-light text-sm appearance-none cursor-pointer ${isDark ? 'bg-larsson-black/50 border-white/5 text-white' : 'bg-black/5 border-black/10 text-larsson-black'}`}
                 value={formData.service}
                 onChange={(e) => setFormData({...formData, service: e.target.value})}
               >
-                <option value="design" className="bg-larsson-black">Graphic Design Service</option>
-                <option value="course" className="bg-larsson-black">Design Course Enrollment</option>
-                <option value="consulting" className="bg-larsson-black">Media Consulting</option>
-                <option value="event" className="bg-larsson-black">Event Visual Strategy</option>
+                <option value="design" className={isDark ? "bg-larsson-black" : "bg-white"}>Graphic Design Service</option>
+                <option value="course" className={isDark ? "bg-larsson-black" : "bg-white"}>Design Course Enrollment</option>
+                <option value="consulting" className={isDark ? "bg-larsson-black" : "bg-white"}>Media Consulting</option>
+                <option value="event" className={isDark ? "bg-larsson-black" : "bg-white"}>Event Visual Strategy</option>
               </select>
             </div>
 
             <div className="space-y-3">
-              <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 ml-1">Brief Details</label>
+              <label className={`text-[10px] uppercase tracking-[0.3em] font-bold ml-1 ${isDark ? 'text-white/30' : 'text-larsson-black'}`}>Brief Details</label>
               <textarea 
                 rows={4}
                 placeholder="How can we help you achieve distinction?"
-                className="w-full bg-larsson-black/50 border border-white/5 rounded-2xl p-5 focus:border-larsson-accent outline-none transition-all text-white font-light text-sm resize-none"
+                className={`w-full border rounded-2xl p-5 focus:border-larsson-accent outline-none transition-all font-light text-sm resize-none ${isDark ? 'bg-larsson-black/50 border-white/5 text-white' : 'bg-black/5 border-black/10 text-larsson-black'}`}
                 value={formData.details}
                 onChange={(e) => setFormData({...formData, details: e.target.value})}
               />
@@ -101,12 +106,12 @@ const Booking: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tighter">Brief Received</h3>
-            <p className="text-white/40 font-light mb-12 text-sm leading-relaxed text-justify-custom px-4">Our strategic team will review your project requirements and vision, and contact you via email within 24 business hours to finalize the engagement.</p>
+            <h3 className={`text-3xl font-black mb-4 uppercase tracking-tighter ${isDark ? 'text-white' : 'text-larsson-black'}`}>Brief Received</h3>
+            <p className={`font-light mb-12 text-sm leading-relaxed text-justify-custom px-4 ${isDark ? 'text-white/40' : 'text-larsson-black'}`}>Our strategic team will review your project requirements and vision, and contact you via email within 24 business hours to finalize the engagement.</p>
             
             <button 
               onClick={handleOpayPayment}
-              className="flex items-center justify-center gap-4 w-full max-w-sm mx-auto bg-white text-larsson-black font-bold py-5 rounded-2xl transition-all hover:bg-larsson-accent hover:text-white shadow-2xl uppercase tracking-widest text-xs"
+              className={`flex items-center justify-center gap-4 w-full max-w-sm mx-auto font-bold py-5 rounded-2xl transition-all shadow-2xl uppercase tracking-widest text-xs ${isDark ? 'bg-white text-larsson-black hover:bg-larsson-accent hover:text-white' : 'bg-larsson-black text-white hover:bg-larsson-accent'}`}
             >
               <img src="https://opayweb.com/static/images/logo.png" alt="Opay" className="h-4" />
               Complete with Opay
@@ -114,7 +119,7 @@ const Booking: React.FC = () => {
             
             <button 
               onClick={() => setPaymentStep(false)}
-              className="mt-8 text-[10px] uppercase tracking-widest font-black text-white/20 hover:text-white transition-all underline underline-offset-4"
+              className={`mt-8 text-[10px] uppercase tracking-widest font-black transition-all underline underline-offset-4 ${isDark ? 'text-white/20 hover:text-white' : 'text-larsson-black/20 hover:text-larsson-black'}`}
             >
               Back to Details
             </button>

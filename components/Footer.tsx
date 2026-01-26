@@ -29,17 +29,18 @@ const Footer: React.FC = () => {
             The creative authority for brands that demand distinction. Visionary media solutions designed for the future of global commerce.
           </p>
           <div className="flex gap-4">
-            <a href="https://t.me/UtibeabasiEssien" target="_blank" rel="noopener noreferrer" className="w-10 h-10 border border-white/10 bg-white/5 rounded-lg flex items-center justify-center text-white/50 hover:bg-larsson-accent hover:text-white transition-all" title="Telegram">
+            {/* Social Icons Deactivated to prevent crashes as requested */}
+            <div className="w-10 h-10 border border-white/5 bg-white/5 rounded-lg flex items-center justify-center text-white/20 cursor-not-allowed" title="Telegram (Inactive)">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.14-.26.26-.534.26l.213-3.053 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
               </svg>
-            </a>
-            <a href="#" className="w-10 h-10 border border-white/10 bg-white/5 rounded-lg flex items-center justify-center text-white/50 hover:bg-larsson-accent hover:text-white transition-all" title="X (Twitter)">
+            </div>
+            <div className="w-10 h-10 border border-white/5 bg-white/5 rounded-lg flex items-center justify-center text-white/20 cursor-not-allowed" title="X (Inactive)">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            </a>
-            <a href="#" className="w-10 h-10 border border-white/10 bg-white/5 rounded-lg flex items-center justify-center text-white/50 hover:bg-larsson-accent hover:text-white transition-all" title="Facebook">
+            </div>
+            <div className="w-10 h-10 border border-white/5 bg-white/5 rounded-lg flex items-center justify-center text-white/20 cursor-not-allowed" title="Facebook (Inactive)">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-8.74h-2.94v-3.403h2.94v-2.511c0-2.91 1.777-4.496 4.375-4.496 1.244 0 2.313.092 2.624.134v3.042l-1.802.001c-1.412 0-1.686.671-1.686 1.656v2.174h3.368l-.439 3.403h-2.929v8.74h6.088c.731 0 1.325-.593 1.325-1.324v-21.351c0-.732-.594-1.325-1.325-1.325z"/></svg>
-            </a>
+            </div>
           </div>
         </div>
 
@@ -98,8 +99,8 @@ const Footer: React.FC = () => {
           &copy; {new Date().getFullYear()} Larsson Corporation.
         </p>
         <div className="flex gap-8 text-[8px] uppercase tracking-[0.2em] font-medium text-white/20">
-          <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+          <a href="https://www.privacypolicygenerator.info/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors cursor-pointer underline underline-offset-2">Privacy Policy</a>
+          <a href="https://www.termsofservicegenerator.net/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors cursor-pointer underline underline-offset-2">Terms of Service</a>
         </div>
       </div>
     </footer>

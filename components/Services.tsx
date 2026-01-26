@@ -39,8 +39,13 @@ const categories: ServiceCategory[] = [
   }
 ];
 
-const Services: React.FC = () => {
+interface ServicesProps {
+  theme?: 'dark' | 'light';
+}
+
+const Services: React.FC<ServicesProps> = ({ theme = 'dark' }) => {
   const [openId, setOpenId] = useState<string | null>('design');
+  const isDark = theme === 'dark';
 
   const toggle = (id: string) => setOpenId(openId === id ? null : id);
 
@@ -48,8 +53,8 @@ const Services: React.FC = () => {
     <div className="max-w-7xl mx-auto px-10 md:px-16">
       <div className="mb-24 reveal text-center">
         <h2 className="text-[10px] uppercase tracking-[0.6em] font-black text-larsson-accent mb-8">Expertise</h2>
-        <h3 className="text-4xl md:text-8xl font-black mb-10 tracking-tighter text-white uppercase">Business <span className="text-larsson-accent">Units</span></h3>
-        <p className="text-white/40 text-base md:text-lg max-w-3xl mx-auto font-light text-justify-custom leading-relaxed">
+        <h3 className={`text-4xl md:text-8xl font-black mb-10 tracking-tighter uppercase ${isDark ? 'text-white' : 'text-larsson-black'}`}>Business <span className="text-larsson-accent">Units</span></h3>
+        <p className={`text-base md:text-lg max-w-3xl mx-auto font-light text-justify-custom leading-relaxed ${isDark ? 'text-white/40' : 'text-larsson-black'}`}>
           Select a business vertical to explore our specialized solutions and creative offerings. Each unit is built on the pillar of distinction, visionary growth, and corporate excellence.
         </p>
       </div>
@@ -62,18 +67,18 @@ const Services: React.FC = () => {
               className={`w-full flex items-center justify-between p-8 md:p-14 transition-all duration-700 border rounded-[2.5rem] ${
                 openId === cat.id 
                   ? 'bg-larsson-accent/5 border-larsson-accent/30 shadow-2xl' 
-                  : 'bg-white/5 border-white/5 hover:border-white/20'
+                  : (isDark ? 'bg-white/5 border-white/5 hover:border-white/20' : 'bg-black/5 border-black/5 hover:border-black/20')
               }`}
             >
               <div className="flex items-center gap-6 md:gap-10">
-                <span className={`text-2xl md:text-5xl font-black opacity-10 transition-opacity group-hover:opacity-40 ${openId === cat.id ? 'text-larsson-accent opacity-50' : 'text-white'}`}>
+                <span className={`text-2xl md:text-5xl font-black opacity-10 transition-opacity group-hover:opacity-40 ${openId === cat.id ? 'text-larsson-accent opacity-50' : (isDark ? 'text-white' : 'text-larsson-black')}`}>
                   {cat.id === 'design' ? '01' : cat.id === 'courses' ? '02' : '03'}
                 </span>
-                <h4 className={`text-lg md:text-3xl font-black uppercase tracking-tighter text-left leading-tight ${openId === cat.id ? 'text-white' : 'text-white/40 group-hover:text-white/80'}`}>
+                <h4 className={`text-lg md:text-3xl font-black uppercase tracking-tighter text-left leading-tight ${openId === cat.id ? (isDark ? 'text-white' : 'text-larsson-black') : (isDark ? 'text-white/40 group-hover:text-white/80' : 'text-larsson-black/40 group-hover:text-larsson-black/80')}`}>
                   {cat.title}
                 </h4>
               </div>
-              <div className={`p-2.5 rounded-full border transition-all duration-500 ${openId === cat.id ? 'rotate-180 border-larsson-accent bg-larsson-accent text-white' : 'border-white/10 text-white/30 group-hover:border-white/40'}`}>
+              <div className={`p-2.5 rounded-full border transition-all duration-500 ${openId === cat.id ? 'rotate-180 border-larsson-accent bg-larsson-accent text-white' : (isDark ? 'border-white/10 text-white/30 group-hover:border-white/40' : 'border-black/10 text-larsson-black/30 group-hover:border-black/40')}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -83,9 +88,9 @@ const Services: React.FC = () => {
             <div className={`overflow-hidden transition-all duration-700 ease-in-out ${openId === cat.id ? 'max-h-[1500px] opacity-100 pt-10 pb-16 md:py-16' : 'max-h-0 opacity-0'}`}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 px-4 md:px-12">
                 {cat.items.map((item, i) => (
-                  <div key={i} className="group p-8 md:p-10 border border-white/5 bg-white/[0.03] rounded-[2rem] hover:bg-larsson-accent/5 transition-all hover:border-larsson-accent/20">
-                    <h5 className="text-xl font-bold mb-4 text-white tracking-tight group-hover:text-larsson-accent transition-colors uppercase">{item.title}</h5>
-                    <p className="text-white/50 leading-relaxed font-light text-justify-custom text-sm">{item.description}</p>
+                  <div key={i} className={`group p-8 md:p-10 border rounded-[2rem] hover:bg-larsson-accent/5 transition-all hover:border-larsson-accent/20 ${isDark ? 'border-white/5 bg-white/[0.03]' : 'border-black/5 bg-black/[0.03]'}`}>
+                    <h5 className={`text-xl font-bold mb-4 tracking-tight group-hover:text-larsson-accent transition-colors uppercase ${isDark ? 'text-white' : 'text-larsson-black'}`}>{item.title}</h5>
+                    <p className={`leading-relaxed font-light text-justify-custom text-sm ${isDark ? 'text-white/50' : 'text-larsson-black'}`}>{item.description}</p>
                   </div>
                 ))}
               </div>

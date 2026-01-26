@@ -2,7 +2,8 @@
 import React from 'react';
 import { Testimonial } from '../types';
 
-const testimonials: Testimonial[] = [
+// Renamed constant to avoid potential shadowing/collision with component name in some TypeScript environments
+const TESTIMONIALS_DATA: Testimonial[] = [
   {
     id: 1,
     name: "John Doe",
@@ -33,21 +34,27 @@ const testimonials: Testimonial[] = [
   }
 ];
 
-const Testimonials: React.FC = () => {
-  const list = [...testimonials, ...testimonials, ...testimonials];
+interface TestimonialsProps {
+  theme?: 'dark' | 'light';
+}
+
+// Using React.FC to properly define component props and avoid IntrinsicAttributes errors in JSX
+const Testimonials: React.FC<TestimonialsProps> = ({ theme = 'dark' }) => {
+  const isDark = theme === 'dark';
+  const list = [...TESTIMONIALS_DATA, ...TESTIMONIALS_DATA, ...TESTIMONIALS_DATA];
 
   return (
-    <div className="relative py-40 bg-larsson-black overflow-hidden border-y border-white/5">
+    <div className={`relative py-40 overflow-hidden border-y transition-colors duration-700 ${isDark ? 'bg-larsson-black border-white/5' : 'bg-white border-black/5'}`}>
       <div className="max-w-7xl mx-auto px-10 md:px-16 text-center mb-24 reveal">
         <h2 className="text-[10px] uppercase tracking-[0.6em] font-black text-larsson-accent mb-8">Social Proof</h2>
-        <h3 className="text-4xl md:text-7xl font-black text-white tracking-tighter">Trusted by <span className="text-gradient">Leaders</span></h3>
+        <h3 className={`text-4xl md:text-7xl font-black tracking-tighter uppercase ${isDark ? 'text-white' : 'text-larsson-black'}`}>Trusted by <span className="text-gradient">Leaders</span></h3>
       </div>
 
       <div className="flex animate-marquee hover:[animation-play-state:paused] w-max">
         {list.map((t, i) => (
           <div 
             key={i} 
-            className="w-[340px] md:w-[420px] aspect-[4/5] mx-8 flex-shrink-0 bg-larsson-grey/30 p-12 md:p-16 border border-white/5 hover:border-larsson-accent transition-all duration-700 rounded-[2.5rem] flex flex-col justify-between"
+            className={`w-[340px] md:w-[420px] aspect-[4/5] mx-8 flex-shrink-0 p-12 md:p-16 border hover:border-larsson-accent transition-all duration-700 rounded-[2.5rem] flex flex-col justify-between ${isDark ? 'bg-larsson-grey/30 border-white/5' : 'bg-black/[0.03] border-black/5'}`}
           >
             <div>
               <div className="flex gap-1.5 mb-10">
@@ -55,14 +62,14 @@ const Testimonials: React.FC = () => {
                   <span key={j} className="text-larsson-accent text-xl">★</span>
                 ))}
               </div>
-              <p className="text-lg md:text-xl font-light italic text-white/80 leading-relaxed mb-12 text-justify-custom">
+              <p className={`text-lg md:text-xl font-light italic leading-relaxed mb-12 text-justify-custom ${isDark ? 'text-white/80' : 'text-larsson-black'}`}>
                 "{t.content}"
               </p>
             </div>
-            <div className="flex items-center gap-6 pt-10 border-t border-white/5">
-              <img src={t.avatar} alt={t.name} className="w-16 h-16 rounded-full grayscale hover:grayscale-0 transition-all border border-white/10 p-1" />
+            <div className={`flex items-center gap-6 pt-10 border-t ${isDark ? 'border-white/5' : 'border-black/5'}`}>
+              <img src={t.avatar} alt={t.name} className={`w-16 h-16 rounded-full grayscale hover:grayscale-0 transition-all border p-1 ${isDark ? 'border-white/10' : 'border-black/10'}`} />
               <div>
-                <h4 className="font-black text-white uppercase tracking-wider text-sm">{t.name}</h4>
+                <h4 className={`font-black uppercase tracking-wider text-sm ${isDark ? 'text-white' : 'text-larsson-black'}`}>{t.name}</h4>
                 <p className="text-[9px] uppercase text-larsson-accent font-black tracking-[0.2em] mt-2">{t.role}</p>
               </div>
             </div>
