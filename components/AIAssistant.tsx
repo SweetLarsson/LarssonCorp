@@ -29,7 +29,6 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose }) => {
     setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     setIsLoading(true);
 
-    // Fix: Explicitly type history to ensure 'role' is exactly 'user' | 'model' as expected by getCreativeAdvice
     const history: { role: 'user' | 'model'; parts: { text: string }[] }[] = messages.map(m => ({
       role: m.role === 'user' ? 'user' : 'model',
       parts: [{ text: m.content }]
@@ -41,8 +40,8 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="absolute bottom-24 right-0 w-[350px] md:w-[450px] h-[600px] bg-larsson-black border-2 border-white/10 shadow-2xl flex flex-col overflow-hidden animate-slide-up z-[80] rounded-2xl backdrop-blur-3xl">
-      <div className="bg-larsson-navy p-6 flex items-center justify-between border-b border-white/10">
+    <div className="absolute bottom-24 right-0 w-[350px] md:w-[450px] h-auto max-h-[500px] bg-larsson-black border-2 border-white/10 shadow-2xl flex flex-col overflow-hidden animate-slide-up z-[80] rounded-2xl backdrop-blur-3xl">
+      <div className="bg-larsson-navy p-6 flex items-center justify-between border-b border-white/10 shrink-0">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-black text-larsson-navy text-sm shadow-xl">AI</div>
           <div>
@@ -57,7 +56,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose }) => {
         </button>
       </div>
 
-      <div ref={scrollRef} className="flex-1 p-6 overflow-y-auto space-y-6 scrollbar-hide">
+      <div ref={scrollRef} className="h-[250px] p-6 overflow-y-auto space-y-6 scrollbar-hide">
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[85%] p-5 rounded-2xl text-sm font-medium leading-relaxed ${
@@ -78,7 +77,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose }) => {
         )}
       </div>
 
-      <div className="p-6 border-t border-white/5 bg-larsson-black/50">
+      <div className="p-6 border-t border-white/5 bg-larsson-black/50 shrink-0">
         <div className="flex gap-3">
           <input
             type="text"

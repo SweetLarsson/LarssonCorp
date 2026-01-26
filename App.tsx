@@ -78,15 +78,15 @@ const App: React.FC = () => {
       <div className="fixed bottom-10 right-10 z-[70]">
         <button
           onClick={() => setIsAiOpen(!isAiOpen)}
-          className="bg-white hover:bg-larsson-accent text-larsson-black hover:text-white p-5 rounded-full shadow-[0_0_50px_rgba(255,255,255,0.1)] transition-all hover:scale-110 active:scale-95 flex items-center justify-center group"
+          className="bg-white hover:bg-larsson-accent text-larsson-black hover:text-white w-16 h-16 rounded-full shadow-[0_0_50px_rgba(255,255,255,0.1)] transition-all hover:scale-110 active:scale-95 flex items-center justify-center group overflow-hidden"
         >
           {isAiOpen ? (
-             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-             </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
             </svg>
           )}
         </button>
