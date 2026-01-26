@@ -8,6 +8,13 @@ const LarssonLogo = ({ className }: { className?: string }) => (
 );
 
 const Footer: React.FC = () => {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer id="contact" className="bg-larsson-black border-t border-white/5 pt-32 pb-12 relative z-10">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 mb-32">
@@ -22,7 +29,7 @@ const Footer: React.FC = () => {
             The creative authority for brands that demand distinction. Visionary media solutions designed for the future of global commerce.
           </p>
           <div className="flex gap-4">
-            <a href="#" className="w-10 h-10 border border-white/10 bg-white/5 rounded-lg flex items-center justify-center text-white/50 hover:bg-larsson-accent hover:text-white transition-all" title="Telegram">
+            <a href="https://t.me/UtibeabasiEssien" target="_blank" rel="noopener noreferrer" className="w-10 h-10 border border-white/10 bg-white/5 rounded-lg flex items-center justify-center text-white/50 hover:bg-larsson-accent hover:text-white transition-all" title="Telegram">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.14-.26.26-.534.26l.213-3.053 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
               </svg>
@@ -39,12 +46,12 @@ const Footer: React.FC = () => {
         <div>
           <h4 className="text-white font-bold uppercase tracking-[0.3em] text-[8px] mb-8">Navigation</h4>
           <ul className="space-y-4 text-white/40 text-[9px] font-medium uppercase tracking-widest">
-            <li><a href="#home" className="hover:text-larsson-accent transition-colors">Home</a></li>
-            <li><a href="#services" className="hover:text-larsson-accent transition-colors">Services</a></li>
-            <li><a href="#about" className="hover:text-larsson-accent transition-colors">Vision</a></li>
-            <li><a href="#founder" className="hover:text-larsson-accent transition-colors">Founder</a></li>
-            <li><a href="#portfolio" className="hover:text-larsson-accent transition-colors">Portfolio</a></li>
-            <li><a href="#booking" className="hover:text-larsson-accent transition-colors">Start Project</a></li>
+            <li><button onClick={() => scrollToSection('home')} className="hover:text-larsson-accent transition-colors text-left uppercase">Home</button></li>
+            <li><button onClick={() => scrollToSection('services')} className="hover:text-larsson-accent transition-colors text-left uppercase">Services</button></li>
+            <li><button onClick={() => scrollToSection('about')} className="hover:text-larsson-accent transition-colors text-left uppercase">Vision</button></li>
+            <li><button onClick={() => scrollToSection('founder')} className="hover:text-larsson-accent transition-colors text-left uppercase">Founder</button></li>
+            <li><button onClick={() => scrollToSection('portfolio')} className="hover:text-larsson-accent transition-colors text-left uppercase">Portfolio</button></li>
+            <li><button onClick={() => scrollToSection('booking')} className="hover:text-larsson-accent transition-colors text-left uppercase">Start Project</button></li>
           </ul>
         </div>
 

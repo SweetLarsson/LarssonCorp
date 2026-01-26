@@ -33,7 +33,7 @@ const Founder: React.FC = () => {
             </p>
           </div>
           <div className="mt-16 pt-8 border-t border-white/5">
-            <h4 className="text-white font-black text-2xl mb-1 tracking-tight uppercase">Adeola Larsson</h4>
+            <h4 className="text-white font-black text-2xl mb-1 tracking-tight uppercase">Utibeabasi Essien</h4>
             <p className="text-larsson-accent font-black uppercase tracking-widest text-[9px]">Founder & Lead Creative Strategist</p>
           </div>
         </div>
