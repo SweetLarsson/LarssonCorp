@@ -11,7 +11,6 @@ const Hero: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Typing Effect
   useEffect(() => {
     const handleType = () => {
       const fullWord = words[wordIndex];
@@ -36,7 +35,6 @@ const Hero: React.FC = () => {
     return () => clearTimeout(timer);
   }, [currentWord, isDeleting, wordIndex, typeSpeed]);
 
-  // Mouse Movement Effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
@@ -52,7 +50,6 @@ const Hero: React.FC = () => {
 
   return (
     <div ref={containerRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-larsson-black">
-      {/* Blurred Video Background */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <video 
           autoPlay 
@@ -66,7 +63,6 @@ const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-larsson-black/40" />
       </div>
 
-      {/* Background Elements */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div 
           className="absolute inset-0 transition-transform duration-1000 ease-out opacity-20"
@@ -77,35 +73,45 @@ const Hero: React.FC = () => {
         </div>
       </div>
 
-      {/* Tighter top padding: from pt-20/pt-28 to pt-12/pt-16 */}
-      <div className="relative z-10 text-center px-6 max-w-6xl pt-12 pb-20 md:pt-16 md:pb-24">
-        <h2 className="text-larsson-accent uppercase tracking-[0.5em] text-[10px] font-bold mb-6 animate-fade-in-down">
+      <div className="relative z-10 text-center px-10 md:px-16 max-w-7xl pt-24 pb-20 md:pt-32 md:pb-24">
+        <h2 className="text-larsson-accent uppercase tracking-[0.5em] text-[10px] font-black mb-10 animate-fade-in-down">
           Visionary • Creative • Authoritative
         </h2>
         
-        <h1 className="text-3xl sm:text-5xl md:text-[6rem] font-display font-black leading-[0.95] mb-10 tracking-tighter">
-          <span className="text-white">When elegance </span> <br className="hidden md:block"/> 
-          <span className="text-white">meets </span> 
-          <span className="text-gradient">Creative </span> <br className="hidden md:block"/>
-          <span className="text-larsson-accent inline-block min-w-[180px] border-r-4 border-white pr-2 transition-all">{currentWord}</span>
+        {/* We use a flex-col layout for the H1 on mobile to prevent horizontal shifts, 
+            and a fixed height for the dynamic row on desktop to prevent vertical jumps. */}
+        <h1 className="text-4xl sm:text-6xl md:text-[8rem] font-black leading-[1] md:leading-[0.9] mb-14 tracking-tighter flex flex-col items-center">
+          <span className="block text-white">When elegance meets</span>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 mt-2 md:mt-0">
+            <span className="text-gradient">Creative</span>
+            {/* 
+               The dynamic span has a fixed-ish min-height to prevent vertical 'shrinking'. 
+               We also ensure white-space: nowrap to prevent words from wrapping mid-typing.
+            */}
+            <div className="relative min-h-[1.2em] flex items-center">
+               <span className="text-larsson-accent inline-block min-w-[200px] sm:min-w-[400px] md:min-w-[650px] border-r-[4px] border-white pr-2 transition-all text-center md:text-left whitespace-nowrap">
+                {currentWord}
+              </span>
+            </div>
+          </div>
         </h1>
 
-        <p className="text-sm md:text-lg text-white/60 max-w-2xl mx-auto mb-12 font-medium leading-relaxed tracking-tight">
+        <p className="text-base md:text-xl text-white/60 max-w-3xl mx-auto mb-20 font-light leading-relaxed tracking-wide text-justify-custom">
           Larsson Corp is a creative force shaping modern media. We provide corporate polish 
-          fused with a daring creative edge.
+          fused with a daring creative edge, catering to startups, corporate brands, and creative aspirants globally. Our work is the confluence of high-end aesthetics and strategic precision.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-5 reveal">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 reveal">
           <button 
             onClick={() => document.getElementById('services')?.scrollIntoView({behavior:'smooth'})}
-            className="group relative px-8 py-3.5 md:px-10 md:py-4 bg-white text-larsson-black font-bold uppercase tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-2xl rounded w-full sm:w-auto text-[10px]"
+            className="group relative px-10 py-5 bg-white text-larsson-black font-black uppercase tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-2xl rounded-2xl w-full sm:w-auto text-[11px]"
           >
             <span className="relative z-10">Explore Services</span>
             <div className="absolute inset-0 bg-larsson-accent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 opacity-10" />
           </button>
           <button 
              onClick={() => document.getElementById('booking')?.scrollIntoView({behavior:'smooth'})}
-             className="px-8 py-3.5 md:px-10 md:py-4 border border-white/10 text-white bg-white/5 hover:bg-larsson-accent hover:border-larsson-accent transition-all font-bold uppercase tracking-widest shadow-2xl rounded w-full sm:w-auto text-[10px]"
+             className="px-10 py-5 border border-white/10 text-white bg-white/5 hover:bg-larsson-accent hover:border-larsson-accent transition-all font-black uppercase tracking-widest shadow-2xl rounded-2xl w-full sm:w-auto text-[11px]"
           >
             Start Project
           </button>
@@ -113,10 +119,10 @@ const Hero: React.FC = () => {
       </div>
 
       <div 
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 cursor-pointer opacity-20 hover:opacity-100 transition-opacity" 
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 cursor-pointer opacity-20 hover:opacity-100 transition-opacity" 
         onClick={() => document.getElementById('services')?.scrollIntoView({behavior:'smooth'})}
       >
-        <div className="w-[1px] h-12 md:h-16 bg-gradient-to-b from-larsson-accent to-transparent animate-[scroll-line_2.5s_infinite]" />
+        <div className="w-[1px] h-14 md:h-20 bg-gradient-to-b from-larsson-accent to-transparent animate-[scroll-line_2.5s_infinite]" />
       </div>
 
       <style>{`

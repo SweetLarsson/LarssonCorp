@@ -10,6 +10,7 @@ import Testimonials from './components/Testimonials';
 import Booking from './components/Booking';
 import AIAssistant from './components/AIAssistant';
 import Footer from './components/Footer';
+import MotionBackground from './components/MotionBackground';
 
 const App: React.FC = () => {
   const [isAiOpen, setIsAiOpen] = useState(false);
@@ -34,38 +35,39 @@ const App: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-larsson-black overflow-x-hidden selection:bg-larsson-accent selection:text-white">
+      {/* Global Motion Background */}
+      <MotionBackground />
+
       <Navbar onBookingClick={() => {
         document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
       }} />
       
-      <main>
+      <main className="relative z-10">
         <section id="home">
           <Hero />
         </section>
 
-        <section id="services" className="py-32 bg-larsson-black relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-larsson-navy/10 to-transparent pointer-events-none" />
+        <section id="services" className="py-32 bg-larsson-black/20 backdrop-blur-sm relative border-y border-white/5">
           <Services />
         </section>
 
-        <section id="about" className="bg-larsson-black">
+        <section id="about" className="bg-larsson-black/20 backdrop-blur-sm">
           <About />
         </section>
 
-        <section id="founder" className="bg-larsson-black">
+        <section id="founder" className="bg-larsson-black/20 backdrop-blur-sm">
           <Founder />
         </section>
 
-        <section id="portfolio" className="py-32 bg-larsson-black">
+        <section id="portfolio" className="py-32 bg-larsson-black/20 backdrop-blur-sm border-y border-white/5">
           <Portfolio />
         </section>
 
-        <section id="testimonials" className="bg-larsson-black">
+        <section id="testimonials" className="bg-larsson-black/20 backdrop-blur-sm">
           <Testimonials />
         </section>
 
-        <section id="booking" className="py-32 bg-larsson-black relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <section id="booking" className="py-32 bg-larsson-black/40 backdrop-blur-md relative overflow-hidden border-t border-white/5">
           <Booking />
         </section>
       </main>
@@ -102,7 +104,7 @@ const App: React.FC = () => {
           transform: translateY(0);
           opacity: 1;
         }
-        #services .reveal { transform: scale(0.95) translateY(40px); }
+        #services .reveal { transform: scale(0.98) translateY(40px); }
         #services .reveal.active { transform: scale(1) translateY(0); }
       `}</style>
     </div>
