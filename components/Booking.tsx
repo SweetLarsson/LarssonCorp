@@ -1,5 +1,23 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+
+// Common countries for the selector
+const COUNTRIES = [
+  { name: 'Nigeria', code: '+234', flag: '🇳🇬' },
+  { name: 'United States', code: '+1', flag: '🇺🇸' },
+  { name: 'United Kingdom', code: '+44', flag: '🇬🇧' },
+  { name: 'Ghana', code: '+233', flag: '🇬🇭' },
+  { name: 'South Africa', code: '+27', flag: '🇿🇦' },
+  { name: 'Canada', code: '+1', flag: '🇨🇦' },
+  { name: 'Germany', code: '+49', flag: '🇩🇪' },
+  { name: 'France', code: '+33', flag: '🇫🇷' },
+  { name: 'India', code: '+91', flag: '🇮🇳' },
+  { name: 'Kenya', code: '+254', flag: '🇰🇪' },
+  { name: 'United Arab Emirates', code: '+971', flag: '🇦🇪' },
+  { name: 'Australia', code: '+61', flag: '🇦🇺' },
+  { name: 'China', code: '+86', flag: '🇨🇳' },
+  { name: 'Brazil', code: '+55', flag: '🇧🇷' },
+];
 
 interface BookingProps {
   theme?: 'dark' | 'light';
@@ -10,11 +28,51 @@ const Booking: React.FC<BookingProps> = ({ theme = 'dark' }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     service: 'design',
     details: '',
   });
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentStep, setPaymentStep] = useState(false);
+  
+  // Phone Selector State
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+  const [countrySearch, setCountrySearch] = useState('');
+  const countryDropdownRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target as Node)) {
+        setIsCountryDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (isCountryDropdownOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isCountryDropdownOpen]);
+
+  const formatPhoneNumber = (value: string) => {
+    // Remove all non-digits
+    const cleaned = value.replace(/\D/g, '');
+    // Limit to 10-11 digits depending on standard (generic grouping)
+    const match = cleaned.match(/^(\d{0,4})(\d{0,3})(\d{0,4})$/);
+    if (!match) return cleaned;
+    
+    return [match[1], match[2], match[3]].filter(group => !!group).join(' ');
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setFormData({ ...formData, phone: formatted });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,8 +84,13 @@ const Booking: React.FC<BookingProps> = ({ theme = 'dark' }) => {
   };
 
   const handleOpayPayment = () => {
-    alert("Redirecting to Opay Gateway... (Simulation)");
+    alert("Redirecting to Opay Gateway...");
   };
+
+  const filteredCountries = COUNTRIES.filter(c => 
+    c.name.toLowerCase().includes(countrySearch.toLowerCase()) || 
+    c.code.includes(countrySearch)
+  );
 
   return (
     <div className="max-w-4xl mx-auto px-10 md:px-16 py-20">
@@ -35,7 +98,7 @@ const Booking: React.FC<BookingProps> = ({ theme = 'dark' }) => {
         <h2 className="text-[10px] uppercase tracking-[0.5em] font-bold text-larsson-accent mb-6">Engagement</h2>
         <h3 className={`text-4xl md:text-6xl font-black mb-8 tracking-tighter uppercase ${isDark ? 'text-white' : 'text-larsson-black'}`}>Start Your Journey</h3>
         <p className={`font-light max-w-xl mx-auto text-sm md:text-base leading-relaxed text-justify-custom ${isDark ? 'text-white/40' : 'text-larsson-black'}`}>
-          Every great vision needs a strategic partner. Secure your project slot today. Payments are handled securely via Opay Online Gateway for total peace of mind.
+          Every visionary project begins with a strategic conversation. Secure your spot in our production cycle today.
         </p>
       </div>
 
@@ -63,6 +126,69 @@ const Booking: React.FC<BookingProps> = ({ theme = 'dark' }) => {
                   className={`w-full border rounded-2xl p-5 focus:border-larsson-accent outline-none transition-all font-light text-sm ${isDark ? 'bg-larsson-black/50 border-white/5 text-white' : 'bg-black/5 border-black/10 text-larsson-black'}`}
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
+                />
+              </div>
+            </div>
+
+            {/* Enhanced Phone Input Field */}
+            <div className="space-y-3">
+              <label className={`text-[10px] uppercase tracking-[0.3em] font-bold ml-1 ${isDark ? 'text-white/30' : 'text-larsson-black'}`}>Phone Number</label>
+              <div className="relative flex gap-2">
+                {/* Country Selector */}
+                <div className="relative shrink-0" ref={countryDropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                    className={`h-full border rounded-2xl px-4 flex items-center gap-2 transition-all outline-none focus:border-larsson-accent ${isDark ? 'bg-larsson-black/50 border-white/5 text-white' : 'bg-black/5 border-black/10 text-larsson-black'}`}
+                  >
+                    <span className="text-xl">{selectedCountry.flag}</span>
+                    <span className="text-xs font-bold">{selectedCountry.code}</span>
+                    <svg className={`w-3 h-3 transition-transform ${isCountryDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/></svg>
+                  </button>
+
+                  {isCountryDropdownOpen && (
+                    <div className={`absolute top-full left-0 mt-2 w-64 max-h-72 overflow-hidden rounded-2xl border shadow-2xl z-50 flex flex-col ${isDark ? 'bg-larsson-darkGrey border-white/10' : 'bg-white border-black/10'}`}>
+                      <div className="p-3 border-b border-inherit">
+                        <input
+                          ref={searchInputRef}
+                          type="text"
+                          placeholder="Search country..."
+                          value={countrySearch}
+                          onChange={(e) => setCountrySearch(e.target.value)}
+                          className={`w-full p-2 text-[10px] font-bold uppercase tracking-wider rounded-lg outline-none ${isDark ? 'bg-white/5 text-white' : 'bg-black/5 text-black'}`}
+                        />
+                      </div>
+                      <div className="overflow-y-auto scrollbar-hide py-2">
+                        {filteredCountries.map((c, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => {
+                              setSelectedCountry(c);
+                              setIsCountryDropdownOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 flex items-center justify-between text-left transition-colors ${isDark ? 'hover:bg-white/5' : 'hover:bg-black/5'}`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl">{c.flag}</span>
+                              <span className={`text-[10px] font-bold ${isDark ? 'text-white/70' : 'text-black/70'}`}>{c.name}</span>
+                            </div>
+                            <span className="text-[10px] font-black text-larsson-accent">{c.code}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Actual Phone Input */}
+                <input 
+                  type="tel" 
+                  required
+                  placeholder="0000 000 0000"
+                  className={`flex-1 border rounded-2xl p-5 focus:border-larsson-accent outline-none transition-all font-light text-sm ${isDark ? 'bg-larsson-black/50 border-white/5 text-white' : 'bg-black/5 border-black/10 text-larsson-black'}`}
+                  value={formData.phone}
+                  onChange={handlePhoneChange}
                 />
               </div>
             </div>
@@ -96,7 +222,7 @@ const Booking: React.FC<BookingProps> = ({ theme = 'dark' }) => {
               disabled={isSubmitting}
               className="w-full bg-larsson-accent text-white font-bold uppercase tracking-widest py-6 rounded-2xl transition-all hover:bg-white hover:text-larsson-black disabled:opacity-50 shadow-xl"
             >
-              {isSubmitting ? 'Processing...' : 'Proceed to Booking'}
+              {isSubmitting ? 'Syncing vision...' : 'Proceed to Booking'}
             </button>
           </form>
         ) : (
@@ -107,7 +233,7 @@ const Booking: React.FC<BookingProps> = ({ theme = 'dark' }) => {
               </svg>
             </div>
             <h3 className={`text-3xl font-black mb-4 uppercase tracking-tighter ${isDark ? 'text-white' : 'text-larsson-black'}`}>Brief Received</h3>
-            <p className={`font-light mb-12 text-sm leading-relaxed text-justify-custom px-4 ${isDark ? 'text-white/40' : 'text-larsson-black'}`}>Our strategic team will review your project requirements and vision, and contact you via email within 24 business hours to finalize the engagement.</p>
+            <p className={`font-light mb-12 text-sm leading-relaxed text-justify-custom px-4 ${isDark ? 'text-white/40' : 'text-larsson-black'}`}>Our strategy team has received your brief. Expect a follow-up via {formData.email} or {selectedCountry.code} {formData.phone} within 24 hours.</p>
             
             <button 
               onClick={handleOpayPayment}

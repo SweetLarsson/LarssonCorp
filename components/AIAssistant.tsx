@@ -8,11 +8,10 @@ interface AIAssistantProps {
   theme?: 'dark' | 'light';
 }
 
-// Using React.FC to properly define component props and ensure consistency with other components
 const AIAssistant: React.FC<AIAssistantProps> = ({ onClose, theme = 'dark' }) => {
   const isDark = theme === 'dark';
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hello! I'm the Larsson Creative Consultant. How can I help elevate your vision today?" }
+    { role: 'assistant', content: "Strategy Consultant online. How can I help elevate your brand vision today?" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +38,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose, theme = 'dark' }) =>
     }));
 
     const result = await getCreativeAdvice(userMsg, history);
-    setMessages(prev => [...prev, { role: 'assistant', content: result || 'I am sorry, I am experiencing a brief connection delay.' }]);
+    setMessages(prev => [...prev, { role: 'assistant', content: result || 'Consultation sync failed. Re-initiating...' }]);
     setIsLoading(false);
   };
 
@@ -55,7 +54,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose, theme = 'dark' }) =>
   const formatText = (text: string) => {
     return text.split('\n').map((line, i) => {
       const trimmed = line.trim();
-      if (!trimmed) return <div key={i} className="h-2" />;
+      if (!trimmed) return <div key={i} className="h-1.5" />;
 
       let segments: React.ReactNode[] = [];
       const boldRegex = /\*\*(.*?)\*\*/g;
@@ -77,84 +76,85 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose, theme = 'dark' }) =>
       if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
         const bulletText = line.replace(/^[\s]*[\*\-]\s/, '');
         return (
-          <li key={i} className={`ml-4 list-disc mb-1 ${isDark ? 'text-white/90' : 'text-black font-semibold'}`}>
+          <li key={i} className={`ml-3 list-disc mb-0.5 text-[10px] leading-snug ${isDark ? 'text-white/90' : 'text-black font-semibold'}`}>
             {bulletText.replace(/\*\*/g, '')}
           </li>
         );
       }
 
-      return <p key={i} className="mb-1 last:mb-0 leading-snug">{segments}</p>;
+      return <p key={i} className="mb-1 last:mb-0 leading-tight text-[10px]">{segments}</p>;
     });
   };
 
   return (
-    <div className={`absolute bottom-24 right-0 w-[340px] md:w-[420px] h-[250px] border-2 shadow-2xl flex flex-col overflow-hidden animate-slide-up z-[80] rounded-[1.5rem] backdrop-blur-3xl transition-colors duration-500 ${isDark ? 'bg-larsson-black border-white/10' : 'bg-white border-black/20'}`}>
+    <div className={`absolute bottom-24 right-0 w-[320px] md:w-[400px] h-[250px] border-2 shadow-2xl flex flex-col overflow-hidden animate-slide-up z-[80] rounded-2xl backdrop-blur-3xl transition-colors duration-500 ${isDark ? 'bg-larsson-black border-white/10' : 'bg-white border-black/20'}`}>
       
       {/* Header */}
-      <div className={`px-5 py-2.5 flex items-center justify-between border-b shrink-0 ${isDark ? 'bg-larsson-navy border-white/10' : 'bg-larsson-grey/5 border-black/10'}`}>
-        <div className="flex items-center gap-2.5">
-          <div className={`w-6 h-6 rounded-full flex items-center justify-center font-black text-[10px] shadow-lg ${isDark ? 'bg-white text-larsson-navy' : 'bg-black text-white'}`}>L</div>
+      <div className={`px-4 py-2 flex items-center justify-between border-b shrink-0 ${isDark ? 'bg-larsson-navy border-white/10' : 'bg-larsson-grey/10 border-black/10'}`}>
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center font-black text-[9px] shadow-lg ${isDark ? 'bg-white text-larsson-navy' : 'bg-black text-white'}`}>L</div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border-2 border-larsson-black animate-pulse" />
+          </div>
           <div className="flex flex-col">
-            <span className={`font-black uppercase tracking-[0.2em] text-[9px] ${isDark ? 'text-white' : 'text-black'}`}>Larsson Assistant</span>
-            <span className={`text-[7px] font-bold uppercase tracking-widest ${isDark ? 'text-larsson-accent' : 'text-larsson-accent'}`}>Online Strategy</span>
+            <span className={`font-black uppercase tracking-[0.2em] text-[8px] ${isDark ? 'text-white' : 'text-black'}`}>Larsson Assistant</span>
+            <span className="text-larsson-accent font-black text-[6px] uppercase tracking-widest">Active Sync</span>
           </div>
         </div>
         <button onClick={onClose} className={`transition-all hover:scale-110 p-1 ${isDark ? 'text-white' : 'text-black'}`}>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
       {/* Chat Area */}
-      <div ref={scrollRef} className={`flex-1 p-4 overflow-y-auto space-y-5 scrollbar-hide ${isDark ? 'bg-larsson-black/30' : 'bg-black/5'}`}>
+      <div ref={scrollRef} className={`flex-1 p-3 overflow-y-auto space-y-4 scrollbar-hide ${isDark ? 'bg-larsson-black/30' : 'bg-black/5'}`}>
         {messages.map((m, i) => (
           <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
-            <div className={`relative group max-w-[90%] p-3.5 rounded-[1.2rem] text-[11px] leading-relaxed shadow-sm ${
+            <div className={`relative group max-w-[92%] p-2.5 rounded-xl shadow-sm ${
               m.role === 'user' 
-                ? 'bg-larsson-accent text-white rounded-br-none font-bold' 
-                : (isDark ? 'bg-larsson-grey/60 text-larsson-lightGrey rounded-bl-none border border-white/5 font-medium' : 'bg-white text-black rounded-bl-none border border-black/10 font-medium')
+                ? 'bg-larsson-accent text-white rounded-br-none font-bold text-[10px]' 
+                : (isDark ? 'bg-larsson-grey/60 text-larsson-lightGrey rounded-bl-none border border-white/5 font-medium' : 'bg-white text-black rounded-bl-none border border-black/10 font-medium shadow-sm')
             }`}>
-              {m.role === 'assistant' ? formatText(m.content) : m.content}
-              
-              {/* Copy Button Container - Appears on Hover */}
-              {m.role === 'assistant' && (
-                <button 
-                  onClick={() => copyToClipboard(m.content, i)}
-                  className={`absolute -right-10 top-0 p-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 ${isDark ? 'bg-white/5 text-white/50 hover:text-white' : 'bg-black/5 text-black/50 hover:text-black'}`}
-                  title="Copy Text"
-                >
-                  {copyingId === i ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-larsson-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                    </svg>
-                  )}
-                </button>
-              )}
+              {m.role === 'assistant' ? (
+                <>
+                  <div className="pr-4">{formatText(m.content)}</div>
+                  <button 
+                    onClick={() => copyToClipboard(m.content, i)}
+                    className={`absolute right-1 top-1 p-1 rounded transition-all ${isDark ? 'text-white/20 hover:text-white hover:bg-white/10' : 'text-black/20 hover:text-black hover:bg-black/5'}`}
+                    title="Copy response"
+                  >
+                    {copyingId === i ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5 text-larsson-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3" />
+                      </svg>
+                    )}
+                  </button>
+                </>
+              ) : m.content}
             </div>
             {copyingId === i && (
-              <span className="text-[7px] font-black text-larsson-accent uppercase mt-1 mr-2 tracking-widest animate-pulse">Copied!</span>
+              <span className="text-[6px] font-black text-larsson-accent uppercase mt-0.5 tracking-tighter animate-pulse">Copied to clipboard</span>
             )}
           </div>
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className={`flex gap-1 p-3 rounded-[1rem] ${isDark ? 'bg-larsson-grey/50' : 'bg-black/5'}`}>
-              <div className="w-1.5 h-1.5 rounded-full bg-larsson-accent animate-bounce" />
-              <div className="w-1.5 h-1.5 rounded-full bg-larsson-accent animate-bounce [animation-delay:0.2s]" />
-              <div className="w-1.5 h-1.5 rounded-full bg-larsson-accent animate-bounce [animation-delay:0.4s]" />
+            <div className={`px-2 py-1 rounded-full text-[7px] font-black uppercase tracking-widest animate-pulse ${isDark ? 'bg-white/5 text-larsson-accent' : 'bg-black/5 text-larsson-accent'}`}>
+              Processing...
             </div>
           </div>
         )}
       </div>
 
       {/* Input Area */}
-      <div className={`p-3 border-t shrink-0 ${isDark ? 'border-white/5 bg-larsson-black/50' : 'border-black/5 bg-white'}`}>
-        <div className="flex gap-2.5">
+      <div className={`p-2 border-t shrink-0 ${isDark ? 'border-white/5 bg-larsson-black/50' : 'border-black/5 bg-white'}`}>
+        <div className="flex gap-2">
           <input
             type="text"
             value={input}
@@ -165,15 +165,15 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose, theme = 'dark' }) =>
                 handleSend();
               }
             }}
-            placeholder="Inquire strategy..."
-            className={`flex-1 border px-4 py-2 text-[10px] font-medium tracking-wide focus:border-larsson-accent outline-none transition-all rounded-full shadow-inner ${isDark ? 'bg-white/5 border-white/10 text-white placeholder:text-white/20' : 'bg-black/5 border-black/10 text-black placeholder:text-black/40'}`}
+            placeholder="Inquire..."
+            className={`flex-1 border px-3 py-1.5 text-[10px] font-medium tracking-wide focus:border-larsson-accent outline-none transition-all rounded-lg ${isDark ? 'bg-white/5 border-white/10 text-white placeholder:text-white/20' : 'bg-black/5 border-black/20 text-black placeholder:text-black/40'}`}
           />
           <button 
             onClick={handleSend}
             disabled={isLoading}
-            className={`h-9 w-9 flex items-center justify-center rounded-full transition-all shadow-lg disabled:opacity-50 shrink-0 ${isDark ? 'bg-white text-larsson-black hover:bg-larsson-accent hover:text-white' : 'bg-larsson-black text-white hover:bg-larsson-accent'}`}
+            className={`h-7 w-7 flex items-center justify-center rounded-lg transition-all shadow-sm disabled:opacity-50 shrink-0 ${isDark ? 'bg-white text-larsson-black hover:bg-larsson-accent hover:text-white' : 'bg-larsson-black text-white hover:bg-larsson-accent'}`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </button>
@@ -182,11 +182,11 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onClose, theme = 'dark' }) =>
 
       <style>{`
         @keyframes slide-up {
-          from { opacity: 0; transform: translateY(40px) scale(0.95); }
+          from { opacity: 0; transform: translateY(30px) scale(0.98); }
           to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .animate-slide-up {
-          animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
