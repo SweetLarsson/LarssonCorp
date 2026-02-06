@@ -7,7 +7,7 @@ const projects: PortfolioProject[] = [
     id: 1, 
     title: 'Teehub Digital Brand', 
     category: 'Design', 
-    image: 'https://images.unsplash.com/photo-1621244290494-0130a2109964?auto=format&fit=crop&q=80&w=1200', 
+    image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=1200', 
     description: 'A comprehensive digital ecosystem branding for a leading technology aggregator.' 
   },
   { 
@@ -62,13 +62,13 @@ const Portfolio: React.FC<PortfolioProps> = ({ theme = 'dark' }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-10 md:px-16">
-      <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-12 reveal">
+      <div className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between mb-24 gap-12 reveal text-center md:text-left">
         <div className="max-w-2xl">
           <h2 className="text-[10px] uppercase tracking-[0.5em] font-black text-larsson-accent mb-8">Selected Portfolio</h2>
           <h3 className={`text-4xl md:text-7xl font-black mb-10 tracking-tighter uppercase ${isDark ? 'text-white' : 'text-larsson-black'}`}>Our <span className="text-gradient">Work</span></h3>
         </div>
         
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 justify-center md:justify-end">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -85,14 +85,18 @@ const Portfolio: React.FC<PortfolioProps> = ({ theme = 'dark' }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
         {filteredProjects.map((project) => (
-          <div key={project.id} className="group relative overflow-hidden reveal rounded-[2rem] shadow-xl">
-            <div className="aspect-[4/5] overflow-hidden">
-              <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0" />
+          <div key={project.id} className="group relative overflow-hidden reveal rounded-[2rem] shadow-xl bg-larsson-black">
+            <div className="aspect-[4/5] overflow-hidden flex items-center justify-center">
+              <img 
+                src={project.image} 
+                alt={project.title} 
+                className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100" 
+              />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-larsson-black via-larsson-black/60 to-transparent flex flex-col justify-end p-10 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-6 group-hover:translate-y-0">
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-10 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
               <span className="text-larsson-accent text-[9px] uppercase font-black tracking-widest mb-4">{project.category}</span>
               <h3 className="text-2xl font-black mb-4 text-white uppercase">{project.title}</h3>
-              <p className="text-xs text-white/70 mb-10 font-light leading-relaxed">{project.description}</p>
+              <p className="text-xs text-white/70 font-light leading-relaxed">{project.description}</p>
             </div>
           </div>
         ))}

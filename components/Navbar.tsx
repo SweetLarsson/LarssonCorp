@@ -7,10 +7,18 @@ interface NavbarProps {
   toggleTheme: () => void;
 }
 
-const LarssonLogo = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 100 100" className={className} fill="currentColor">
-    <path d="M50 12L12 88H32L45 62L38 62L28 82L22 82L50 26L78 82L72 82L62 62L55 62L68 88H88L50 12Z" />
-  </svg>
+const LarssonLogo = ({ className, isDark }: { className?: string; isDark: boolean }) => (
+  <div className={`${className} overflow-hidden flex items-center justify-center`}>
+    <img 
+      src="https://i.imgur.com/3qYmgFZ.jpeg" 
+      alt="Larsson Corp" 
+      className="w-full h-full object-contain"
+      style={{ 
+        mixBlendMode: isDark ? 'screen' : 'multiply',
+        filter: isDark ? 'invert(1) brightness(1.5)' : 'none'
+      }}
+    />
+  </div>
 );
 
 const Navbar: React.FC<NavbarProps> = ({ onBookingClick, theme, toggleTheme }) => {
@@ -30,6 +38,7 @@ const Navbar: React.FC<NavbarProps> = ({ onBookingClick, theme, toggleTheme }) =
     { name: 'About', href: 'about' },
     { name: 'Founder', href: 'founder' },
     { name: 'Portfolio', href: 'portfolio' },
+    { name: 'Global HQ', href: 'location' },
     { name: 'Contact', href: 'contact' },
   ];
 
@@ -46,7 +55,7 @@ const Navbar: React.FC<NavbarProps> = ({ onBookingClick, theme, toggleTheme }) =
       {/* Click-outside Overlay for Menu */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-0 z-[55] bg-transparent cursor-default md:hidden"
+          className="fixed inset-0 z-[55] bg-transparent cursor-default"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
@@ -58,13 +67,8 @@ const Navbar: React.FC<NavbarProps> = ({ onBookingClick, theme, toggleTheme }) =
           : 'bg-gradient-to-r from-white/90 via-[#E5E5E5]/90 to-white/90 backdrop-blur-xl border-black/5'
         } ${scrolled ? 'translate-y-0 scale-95' : 'translate-y-2'}`}>
           
-          {/* Silver/White Transition Light Stroke */}
-          <div className={`absolute inset-0 pointer-events-none opacity-30 border-[1px] rounded-[1.5rem] ${isDark ? 'border-white/40' : 'border-black/10'}`} />
-
           <div className="flex items-center gap-3 group cursor-pointer z-50" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
-            <div className={`w-6 h-6 transition-colors ${isDark ? 'text-white' : 'text-larsson-black'}`}>
-              <LarssonLogo className="w-full h-full" />
-            </div>
+            <LarssonLogo className="w-10 h-10" isDark={isDark} />
             <span className={`text-[10px] font-black tracking-widest uppercase ${isDark ? 'text-white' : 'text-larsson-black'}`}>Larsson <span className="text-larsson-accent">Corp</span></span>
           </div>
 
@@ -97,30 +101,26 @@ const Navbar: React.FC<NavbarProps> = ({ onBookingClick, theme, toggleTheme }) =
               Initiate
             </button>
 
-            {/* Mobile Menu Toggle */}
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className={`md:hidden p-1.5 rounded-full transition-colors ${isDark ? 'text-white hover:bg-white/10' : 'text-larsson-black hover:bg-black/5'}`}
             >
-              {mobileMenuOpen ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/></svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7"/></svg>
-              )}
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7"/></svg>
             </button>
           </div>
 
-          {/* Mobile Menu Dialog - Width 35%, Dynamic Height, Capped at 50px bottom */}
+          {/* Menu Dialog - Strictly 35% Width on Desktop, Scrollable, Hidden Scrollbar */}
           <div 
             style={{ 
               maxHeight: mobileMenuOpen ? 'calc(100vh - 150px)' : '0',
-              width: 'calc(max(280px, 35vw))',
+              width: '35vw',
+              minWidth: '280px',
               right: 0,
               overflowY: 'auto'
             }}
-            className={`absolute top-full mt-4 transition-all duration-500 ease-in-out z-40 rounded-[2.5rem] shadow-3xl md:hidden scrollbar-hide ${
-              mobileMenuOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-            } ${isDark ? 'bg-larsson-grey/95 border border-white/10' : 'bg-white/95 border border-black/10'} backdrop-blur-2xl`}
+            className={`absolute top-full mt-4 transition-all duration-500 ease-in-out z-[56] rounded-[2.5rem] shadow-3xl md:hidden scrollbar-hide border ${
+              mobileMenuOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95 pointer-events-none'
+            } ${isDark ? 'bg-larsson-grey/95 border-white/10' : 'bg-white/95 border-black/10'} backdrop-blur-2xl`}
           >
             <div className="p-10 flex flex-col">
               <div className="space-y-4">
@@ -128,7 +128,7 @@ const Navbar: React.FC<NavbarProps> = ({ onBookingClick, theme, toggleTheme }) =
                   <button
                     key={link.name}
                     onClick={() => handleLinkClick(link.href)}
-                    className={`block w-full text-left text-base font-bold tracking-tight transition-all border-b pb-4 ${isDark ? 'text-white/60 border-white/5 hover:text-larsson-accent' : 'text-larsson-black/60 border-black/5 hover:text-larsson-accent'}`}
+                    className={`block w-full text-left text-sm font-bold tracking-tight transition-all border-b pb-4 ${isDark ? 'text-white/60 border-white/5 hover:text-larsson-accent' : 'text-larsson-black/60 border-black/5 hover:text-larsson-accent'}`}
                   >
                     {link.name}
                   </button>
@@ -141,7 +141,7 @@ const Navbar: React.FC<NavbarProps> = ({ onBookingClick, theme, toggleTheme }) =
                 }}
                 className="w-full bg-larsson-accent text-white py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] mt-8 shadow-lg shadow-larsson-accent/30 hover:scale-105 active:scale-95 transition-all"
               >
-                Start Project
+                Initiate Project
               </button>
             </div>
           </div>

@@ -30,6 +30,13 @@ const Hero: React.FC<HeroProps> = ({ theme = 'dark' }) => {
     return () => clearTimeout(timer);
   }, [currentWord, isDeleting, wordIndex]);
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className={`relative min-h-screen w-full flex items-center justify-center overflow-hidden transition-colors duration-700 ${isDark ? 'bg-larsson-black' : 'bg-white'}`}>
       {/* AI Generated Motion Background - Ambient Forest */}
@@ -40,23 +47,29 @@ const Hero: React.FC<HeroProps> = ({ theme = 'dark' }) => {
         <div className={`absolute inset-0 ${isDark ? 'bg-larsson-black/60' : 'bg-white/40'}`} />
       </div>
 
-      <div className="relative z-10 text-center px-10 max-w-5xl pt-32">
-        <h2 className="text-larsson-accent uppercase tracking-[0.5em] text-[10px] font-black mb-8">Visionary • Creative • Authoritative</h2>
+      <div className="relative z-10 text-center px-8 sm:px-12 lg:px-[20%] w-full pt-32">
+        <h2 className="text-larsson-accent uppercase tracking-[0.5em] text-[10px] md:text-[12px] font-black mb-8">Visionary • Creative • Authoritative</h2>
         
-        <h1 className={`text-4xl md:text-6xl font-black leading-tight mb-10 tracking-tighter uppercase transition-colors duration-700 ${isDark ? 'text-white' : 'text-larsson-black'}`}>
+        <h1 className={`text-5xl sm:text-7xl md:text-[7vw] lg:text-[6.5vw] font-black leading-[1.05] mb-12 tracking-tighter uppercase transition-colors duration-700 ${isDark ? 'text-white' : 'text-larsson-black'}`}>
           When elegance meets <br/>
           <span className="text-gradient">Creative {currentWord}</span>
         </h1>
 
-        <p className={`text-base md:text-lg max-w-2xl mx-auto mb-16 font-light leading-relaxed text-justify-custom transition-colors duration-700 ${isDark ? 'text-white/50' : 'text-larsson-black/70'}`}>
-          Larsson Corp is a creative force shaping modern media. We provide corporate polish fused with a daring creative edge.
+        <p className={`text-base md:text-xl lg:text-[1.2vw] max-w-4xl mx-auto mb-16 font-light leading-relaxed text-justify-custom transition-colors duration-700 ${isDark ? 'text-white/50' : 'text-larsson-black/70'}`}>
+          Larsson Corp is a creative force shaping modern media. We provide corporate polish fused with a daring creative edge, architecting the visual language of distinction.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <button className={`px-10 py-5 font-black uppercase tracking-widest rounded-2xl transition-all shadow-2xl text-[10px] ${isDark ? 'bg-white text-larsson-black hover:bg-larsson-accent hover:text-white' : 'bg-larsson-black text-white hover:bg-larsson-accent'}`}>
+          <button 
+            onClick={() => scrollToSection('services')}
+            className={`px-12 py-6 font-black uppercase tracking-widest rounded-2xl transition-all shadow-2xl text-[10px] md:text-[11px] ${isDark ? 'bg-white text-larsson-black hover:bg-larsson-accent hover:text-white' : 'bg-larsson-black text-white hover:bg-larsson-accent'}`}
+          >
             Explore Services
           </button>
-          <button className={`px-10 py-5 border font-black uppercase tracking-widest rounded-2xl transition-all text-[10px] ${isDark ? 'border-white/20 text-white hover:bg-white/10' : 'border-black/10 text-larsson-black hover:bg-black/5'}`}>
+          <button 
+            onClick={() => scrollToSection('booking')}
+            className={`px-12 py-6 border font-black uppercase tracking-widest rounded-2xl transition-all text-[10px] md:text-[11px] ${isDark ? 'border-white/20 text-white hover:bg-white/10' : 'border-black/10 text-larsson-black hover:bg-black/5'}`}
+          >
             Start Project
           </button>
         </div>

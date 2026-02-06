@@ -7,6 +7,7 @@ import About from './components/About';
 import Founder from './components/Founder';
 import Portfolio from './components/Portfolio';
 import Testimonials from './components/Testimonials';
+import Location from './components/Location';
 import Booking from './components/Booking';
 import AIAssistant from './components/AIAssistant';
 import Footer from './components/Footer';
@@ -74,6 +75,10 @@ const App: React.FC = () => {
 
         <section id="testimonials" className="backdrop-blur-sm">
           <Testimonials theme={theme} />
+        </section>
+
+        <section id="location" className="backdrop-blur-sm">
+          <Location theme={theme} />
         </section>
 
         <section id="booking" className={`py-32 backdrop-blur-md relative overflow-hidden border-t transition-colors duration-700 ${theme === 'dark' ? 'bg-larsson-black/40 border-white/5' : 'bg-white/40 border-black/5'}`}>

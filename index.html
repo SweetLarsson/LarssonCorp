@@ -54,14 +54,18 @@
       }
     </script>
     <style>
-      body::-webkit-scrollbar {
-        display: none;
+      /* Hide scrollbars globally */
+      *::-webkit-scrollbar {
+        display: none !important;
+      }
+      * {
+        -ms-overflow-style: none !important;
+        scrollbar-width: none !important;
       }
       body {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
         background-color: #020202;
         font-family: 'Montserrat', sans-serif;
+        overflow-x: hidden;
       }
       .text-justify-custom {
         text-align: justify;
