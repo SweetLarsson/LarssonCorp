@@ -1,8 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Testimonial } from '../types';
 
-// Renamed constant to avoid potential shadowing/collision with component name in some TypeScript environments
 const TESTIMONIALS_DATA: Testimonial[] = [
   {
     id: 1,
@@ -38,19 +37,27 @@ interface TestimonialsProps {
   theme?: 'dark' | 'light';
 }
 
-// Using React.FC to properly define component props and avoid IntrinsicAttributes errors in JSX
 const Testimonials: React.FC<TestimonialsProps> = ({ theme = 'dark' }) => {
+  const [isPaused, setIsPaused] = useState(false);
   const isDark = theme === 'dark';
   const list = [...TESTIMONIALS_DATA, ...TESTIMONIALS_DATA, ...TESTIMONIALS_DATA];
 
   return (
-    <div className={`relative py-40 overflow-hidden border-y transition-colors duration-700 ${isDark ? 'bg-larsson-black border-white/5' : 'bg-white border-black/5'}`}>
+    <div 
+      className={`relative py-40 overflow-hidden border-y transition-colors duration-700 ${isDark ? 'bg-larsson-black border-white/5' : 'bg-white border-black/5'}`}
+      onClick={() => setIsPaused(!isPaused)}
+    >
       <div className="max-w-7xl mx-auto px-10 md:px-16 text-center mb-24 reveal">
         <h2 className="text-[10px] uppercase tracking-[0.6em] font-black text-larsson-accent mb-8">Social Proof</h2>
         <h3 className={`text-4xl md:text-7xl font-black tracking-tighter uppercase ${isDark ? 'text-white' : 'text-larsson-black'}`}>Trusted by <span className="text-gradient">Leaders</span></h3>
+        <p className={`mt-6 text-[9px] font-black tracking-[0.3em] uppercase opacity-40 ${isDark ? 'text-white' : 'text-larsson-black'}`}>
+          {isPaused ? 'Click to resume movement' : 'Click to pause reading'}
+        </p>
       </div>
 
-      <div className="flex animate-marquee hover:[animation-play-state:paused] w-max">
+      <div 
+        className={`flex animate-marquee w-max transition-all duration-300 ${isPaused ? '[animation-play-state:paused]' : ''}`}
+      >
         {list.map((t, i) => (
           <div 
             key={i} 

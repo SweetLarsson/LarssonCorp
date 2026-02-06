@@ -16,26 +16,23 @@ const MotionBackground: React.FC<MotionBackgroundProps> = ({ theme = 'dark' }) =
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden transition-all duration-700">
-      {/* Dynamic Grid */}
-      <div className={`absolute inset-0 grid-bg transition-opacity duration-700 ${isDark ? 'opacity-40' : 'opacity-10'}`} />
-      
-      {/* Floating Blobs */}
-      <div className={`absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] blur-[120px] rounded-full animate-float transition-all duration-1000 ${isDark ? 'bg-larsson-accent/5' : 'bg-larsson-accent/10'}`} />
-      <div className={`absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] blur-[100px] rounded-full animate-float-delayed transition-all duration-1000 ${isDark ? 'bg-larsson-navy/20' : 'bg-larsson-accent/5'}`} />
-      
-      {/* Moving Geometric Icons */}
-      <div className={`absolute top-[15%] right-[10%] animate-spin-slow transition-opacity duration-700 ${isDark ? 'opacity-[0.03] text-white' : 'opacity-[0.05] text-larsson-black'}`}>
-        <LarssonIcon className="w-64 h-64" />
+      {/* Floating Randomly Flying Logos - Blurred */}
+      <div className={`absolute top-[15%] left-[10%] animate-float opacity-[0.03] transition-colors duration-700 ${isDark ? 'text-white' : 'text-larsson-black'}`}>
+        <LarssonIcon className="w-64 h-64 blur-2xl rotate-12" />
       </div>
-      <div className={`absolute bottom-[20%] left-[5%] animate-float transition-opacity duration-700 ${isDark ? 'opacity-[0.02] text-white' : 'opacity-[0.04] text-larsson-black'}`}>
-        <LarssonIcon className="w-96 h-96" />
-      </div>
-      <div className={`absolute top-[60%] right-[30%] animate-float-delayed scale-50 transition-opacity duration-700 ${isDark ? 'opacity-[0.05]' : 'opacity-[0.1]'}`}>
-        <LarssonIcon className="w-48 h-48 text-larsson-accent" />
+      <div className={`absolute bottom-[20%] right-[10%] animate-float-delayed opacity-[0.02] transition-colors duration-700 ${isDark ? 'text-white' : 'text-larsson-black'}`}>
+        <LarssonIcon className="w-80 h-80 blur-[80px] -rotate-45" />
       </div>
 
-      {/* Subtle Noise/Overlay */}
-      <div className={`absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] transition-opacity duration-700 ${!isDark && 'opacity-[0.05]'}`} />
+      {/* Sound Waves Moving L to R */}
+      <div className="absolute top-1/2 left-0 w-full h-[300px] -translate-y-1/2 opacity-[0.05] flex items-center">
+        <div className="w-full h-1 bg-gradient-to-r from-transparent via-larsson-accent to-transparent animate-wave" />
+        <div className="absolute top-10 w-full h-[2px] bg-gradient-to-r from-transparent via-white to-transparent animate-wave opacity-50" style={{ animationDelay: '1s' }} />
+      </div>
+
+      {/* Light Globs */}
+      <div className={`absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] blur-[150px] rounded-full transition-all duration-1000 ${isDark ? 'bg-larsson-accent/10' : 'bg-larsson-accent/15'}`} />
+      <div className={`absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] blur-[120px] rounded-full transition-all duration-1000 ${isDark ? 'bg-larsson-navy/20' : 'bg-larsson-accent/5'}`} />
     </div>
   );
 };

@@ -1,7 +1,6 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Always use process.env.API_KEY directly as per Gemini API guidelines
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getCreativeAdvice = async (prompt: string, history: { role: 'user' | 'model', parts: { text: string }[] }[]) => {
@@ -13,12 +12,11 @@ export const getCreativeAdvice = async (prompt: string, history: { role: 'user' 
         { role: 'user', parts: [{ text: prompt }] }
       ],
       config: {
-        systemInstruction: "You are the Larsson Corp Creative Consultant. Your tone is Visionary, Confident, Innovative, and Trustworthy. You help users with graphic design ideas, media strategy, and course recommendations for Larsson Corp. Keep responses professional, concise, and inspiring.",
+        systemInstruction: "You are the Larsson Corp Creative Consultant. Your tone is Visionary, Confident, Innovative, and Trustworthy. When providing reports or strategy, use structured formats: use '---' for section dividers, use Markdown-style tables for comparisons or data, and use clear indentations for hierarchies. DO NOT use double asterisks (**) for bolding; instead, just write the text clearly as you are speaking to an executive. Focus on being concise and authoritative. Ensure your output is polished and ready for presentation.",
         temperature: 0.7,
       }
     });
     
-    // Access response.text property directly as it returns the extracted string output
     return response.text;
   } catch (error) {
     console.error("Gemini API Error:", error);
